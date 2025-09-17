@@ -33,17 +33,17 @@ export default function TopNavigation() {
             </Link>
             <nav className="flex space-x-6">
               {navigation.map((item) => (
-                <Link key={item.name} href={item.href}>
-                  <a
-                    className={`${
-                      isActive(item.href)
-                        ? "text-primary font-medium border-b-2 border-primary pb-1"
-                        : "text-muted-foreground hover:text-foreground"
-                    } transition-colors`}
-                    data-testid={`nav-${item.name.toLowerCase().replace(" ", "-")}`}
-                  >
-                    {item.name}
-                  </a>
+                <Link 
+                  key={item.name} 
+                  href={item.href}
+                  className={`${
+                    isActive(item.href)
+                      ? "text-primary font-medium border-b-2 border-primary pb-1"
+                      : "text-muted-foreground hover:text-foreground"
+                  } transition-colors`}
+                  data-testid={`nav-${item.name.toLowerCase().replace(" ", "-")}`}
+                >
+                  {item.name}
                 </Link>
               ))}
             </nav>
