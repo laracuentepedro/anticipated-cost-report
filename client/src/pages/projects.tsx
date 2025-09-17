@@ -197,7 +197,7 @@ export default function Projects() {
                           <Input 
                             type="date" 
                             {...field}
-                            value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                            value={field.value || ''}
                             data-testid="input-start-date"
                           />
                         </FormControl>
@@ -216,7 +216,7 @@ export default function Projects() {
                           <Input 
                             type="date" 
                             {...field}
-                            value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                            value={field.value || ''}
                             data-testid="input-end-date"
                           />
                         </FormControl>
