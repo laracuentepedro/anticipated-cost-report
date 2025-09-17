@@ -3,12 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import CostEntryModal from "@/components/CostEntryModal";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Dashboard() {
   const [showCostModal, setShowCostModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
     queryKey: ["/api/projects"],
@@ -23,6 +28,11 @@ export default function Dashboard() {
   // Calculate metrics from projects
   const activeProjects = projects.filter((p: any) => p.status === "active");
   const totalBudget = activeProjects.reduce((sum: number, p: any) => sum + Number(p.budget), 0);
+
+  const handleViewProject = (projectId: string) => {
+    const project = projects.find((p: any) => p.id === projectId);
+    setSelectedProject(project);
+  };
 
   return (
     <div className="space-y-6">
@@ -189,6 +199,7 @@ export default function Dashboard() {
                   <div 
                     key={project.id} 
                     className="flex items-center justify-between p-3 bg-accent rounded-md hover:bg-accent/80 transition-colors cursor-pointer"
+                    onClick={() => handleViewProject(project.id)}
                     data-testid={`card-project-${project.id}`}
                   >
                     <div className="flex-1">
@@ -343,6 +354,70 @@ export default function Dashboard() {
       </Button>
 
       <CostEntryModal open={showCostModal} onOpenChange={setShowCostModal} />
+      
+      {/* Project Details Modal */}
+      <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Project Details</DialogTitle>
+          </DialogHeader>
+          {selectedProject && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">{selectedProject.name}</h3>
+                <Badge variant={selectedProject.status === 'active' ? 'default' : 'secondary'}>
+                  {selectedProject.status}
+                </Badge>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium text-muted-foreground">Project #:</span>
+                  <p>{selectedProject.projectNumber}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-muted-foreground">Type:</span>
+                  <p className="capitalize">{selectedProject.projectType}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-muted-foreground">Budget:</span>
+                  <p>${Number(selectedProject.budget).toLocaleString()}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-muted-foreground">Due Date:</span>
+                  <p>{selectedProject.endDate ? new Date(selectedProject.endDate).toLocaleDateString() : 'TBD'}</p>
+                </div>
+              </div>
+              {selectedProject.description && (
+                <div>
+                  <span className="font-medium text-muted-foreground">Description:</span>
+                  <p className="text-sm mt-1">{selectedProject.description}</p>
+                </div>
+              )}
+              <div className="flex space-x-3 pt-4">
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => {
+                    setSelectedProject(null);
+                    setLocation('/projects');
+                  }}
+                >
+                  View in Projects
+                </Button>
+                <Button 
+                  className="flex-1"
+                  onClick={() => {
+                    setSelectedProject(null);
+                    setLocation('/cost-entry');
+                  }}
+                >
+                  Add Costs
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

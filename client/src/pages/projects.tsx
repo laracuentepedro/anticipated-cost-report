@@ -18,6 +18,8 @@ import { z } from "zod";
 
 const projectFormSchema = insertProjectSchema.extend({
   budget: z.string().min(1, "Budget is required"),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 });
 
 type ProjectFormData = z.infer<typeof projectFormSchema>;
@@ -72,6 +74,21 @@ export default function Projects() {
 
   const onSubmit = (data: ProjectFormData) => {
     createProjectMutation.mutate(data);
+  };
+
+  const handleViewProject = (projectId: string) => {
+    const project = projects.find((p: any) => p.id === projectId);
+    toast({
+      title: "Project Details",
+      description: `${project?.name} - Budget: $${Number(project?.budget).toLocaleString()} - Status: ${project?.status}`,
+    });
+  };
+
+  const handleEditProject = (project: any) => {
+    toast({
+      title: "Edit Project",
+      description: `Edit functionality for ${project.name} will be available in the next update`,
+    });
   };
 
   const getStatusBadgeVariant = (status: string) => {
@@ -336,11 +353,23 @@ export default function Projects() {
                   )}
 
                   <div className="flex space-x-2 pt-3">
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => handleViewProject(project.id)}
+                      data-testid={`button-view-${project.id}`}
+                    >
                       <i className="fas fa-eye mr-1"></i>
                       View
                     </Button>
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => handleEditProject(project)}
+                      data-testid={`button-edit-${project.id}`}
+                    >
                       <i className="fas fa-edit mr-1"></i>
                       Edit
                     </Button>

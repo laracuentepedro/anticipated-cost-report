@@ -37,6 +37,7 @@ export default function ChangeOrders() {
   const form = useForm<ChangeOrderFormData>({
     resolver: zodResolver(changeOrderFormSchema),
     defaultValues: {
+      projectId: "",
       changeOrderNumber: "",
       description: "",
       amount: "",
