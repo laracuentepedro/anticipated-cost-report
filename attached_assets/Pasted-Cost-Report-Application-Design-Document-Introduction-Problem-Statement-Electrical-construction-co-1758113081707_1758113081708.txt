@@ -1,0 +1,101 @@
+Cost Report Application - Design Document
+Introduction
+Problem Statement
+
+Electrical construction companies currently rely on fragmented systems—spreadsheets, paper forms, and generic accounting software—to track project costs. This creates several critical issues:
+
+Delayed Cost Visibility: Project managers discover cost overruns weeks after they occur
+Manual Data Entry: Field crews waste time on paperwork instead of productive work
+Inaccurate Budgeting: Historical cost data is scattered and difficult to analyze
+Poor Decision Making: Lack of real-time cost information leads to reactive management
+Profit Erosion: Small cost overruns compound across multiple projects
+Solution Purpose
+
+This standalone cost reporting tool eliminates these inefficiencies by providing electrical contractors with:
+
+Real-time project cost tracking tailored to electrical work
+Mobile-first data entry for field teams
+Instant budget vs actual comparisons
+Electrical-specific cost codes and reporting
+Centralized project financial data
+
+The result: proactive cost management, improved profitability, and data-driven project decisions.
+
+Overview
+
+Standalone web-based cost reporting system for electrical construction projects to track budgets, actual costs, and variances in real-time.
+
+Core Requirements
+Functional Requirements
+Project Management: Create, edit, and archive electrical projects
+Cost Tracking: Labor, materials, equipment, subcontractor costs
+Budget vs Actual: Real-time variance analysis and alerts
+Reporting: Standard reports with CSV/PDF export
+User Management: Role-based access (PM, Estimator, Accountant, Executive)
+Key Features
+Dashboard with project cost summaries
+Electrical-specific cost codes (conduit, wire, panels, fixtures, etc.)
+Change order tracking and approval workflow
+Mobile-friendly for field cost entry
+Document attachment (invoices, receipts, photos)
+Built-in calculator for electrical estimates
+Technical Specifications
+Architecture
+Frontend: React.js with responsive design
+Backend: Node.js/Express API
+Database: PostgreSQL
+Authentication: JWT with role-based permissions
+File Storage: Local file system with organized structure
+Data Models
+Projects: id, name, number, start_date, end_date, budget, status
+Cost_Entries: id, project_id, cost_code, description, amount, date, type
+Cost_Codes: id, code, description, category, unit_price
+Users: id, name, email, role, permissions
+Change_Orders: id, project_id, description, amount, status, date
+
+API Endpoints
+/api/projects - CRUD operations
+/api/costs - Cost entry management
+/api/reports - Report generation
+/api/users - User management
+/api/change-orders - Change order workflow
+User Interface
+Key Screens
+Dashboard: Project overview, cost alerts, quick stats
+Project Detail: Cost breakdown by category, timeline view
+Cost Entry: Simple form with cost code dropdown
+Reports: Project P&L, cost variance, labor productivity
+Admin Panel: User roles, cost code management
+Mobile Considerations
+Touch-optimized cost entry forms
+Photo capture for receipts
+Simplified navigation
+Offline data entry with sync
+Core Features Detail
+Cost Categories
+Labor: Hours × rates by trade/skill level
+Materials: Quantities × unit costs
+Equipment: Rental/purchase costs
+Subcontractors: Contract amounts and change orders
+Reporting Suite
+Project profitability summary
+Cost variance by category
+Labor productivity metrics
+Monthly cost trends
+Budget vs actual comparison
+Security & Performance
+Data encryption and secure authentication
+Local database backups
+Audit trail for cost changes
+Page loads < 2 seconds
+Support 25+ concurrent users
+Deployment
+Self-hosted solution
+Docker containerization
+Simple backup/restore procedures
+Minimal server requirements
+Success Metrics
+60% reduction in cost reporting time
+Budget accuracy within 5%
+90%+ user adoption
+Mobile usage > 40%
